@@ -1,6 +1,29 @@
 module RFTools
 
+function blackman(N::Int64)
+    """
+    Returns an N-point Blackman window.
+
+    Need to implement the choice of periodic/symmetric Blackman windows.
+    """
+    if iseven(N)
+        M = N / 2
+        n = vcat(0:(M-1), (M-1):-1:0)
+    else
+        M = (N + 1) / 2
+        n = vcat(0:(M-1), (M-2):-1:0)
+    end
+    window = zeros(Float64, N)
+    for i=1:N
+        window[i] = 0.42 - 0.5.*cos(2*π*n[i]/(N-1)) + 0.08*cos(4*π*n[i]/(N-1))
+    end
+    window
+end
+
 function tukey(N::Int64, α::Float64)
+    """
+    Returns an N-point Tukey window.
+    """
     window = zeros(Float64, N)
     boundary1 = α/2
     boundary2 = 1 - α/2
