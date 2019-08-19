@@ -1,5 +1,16 @@
 module RFTools
 
+function bartlett(N::Int64)
+    window = zeros(N)
+    for n=0:(N-1)
+        window[n+1] = 1 - 2*abs(n - (N-1)/2)/(N-1)
+    end
+    if N == 1
+        window = 1.0
+    end
+    window
+end
+
 function blackman(N::Int64)
     """
     Returns an N-point Blackman window.
