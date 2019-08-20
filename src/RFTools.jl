@@ -1,5 +1,7 @@
 module RFTools
 
+using SpecialFunctions
+
 function bartlett(N::Int64)
     window = zeros(N)
     for n=0:(N-1)
@@ -48,6 +50,17 @@ function hanning(N::Int64)
     """
     n = 0:(N-1)
     0.5 .* (1 .- cos.(2.0 .* π .* n ./ (N - 1)))
+end
+
+function kaiser(N::Int64, β::Float64)
+    """
+    Returns an N-point Kaiser window with shape factor beta.
+    """
+    window = zeros(N+1)
+    for n=0:N
+        window[n+1] = SpecialFunctions.besseli(0, β*sqrt(1 - (2*n/N - 1)^2)) / SpecialFunctions.besseli(0, β)
+    end
+    window
 end
 
 function tukey(N::Int64, α::Float64)
