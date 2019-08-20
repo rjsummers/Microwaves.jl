@@ -32,11 +32,22 @@ function blackman(N::Int64)
 end
 
 function hamming(N::Int64)
+    """
+    Returns an N-point hamming window.
+    """
     window = zeros(N)
     for n=0:(N-1)
         window[n+1] = 0.54 - 0.46*cos(2*π*n/(N-1))
     end
     window
+end
+
+function hanning(N::Int64)
+    """
+    Returns an N-point hanning window.
+    """
+    n = 0:(N-1)
+    0.5 .* (1 .- cos.(2.0 .* π .* n ./ (N - 1)))
 end
 
 function tukey(N::Int64, α::Float64)
