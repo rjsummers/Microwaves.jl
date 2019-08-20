@@ -41,12 +41,39 @@ mutable struct TParameters <: Network
     f::Vector{Float64}
 end
 
+function ABCDParameters(sparams::SParameters)
+    s11 = sparams[:,1,1]
+    s12 = sparams[:,1,2]
+    s21 = sparams[:,2,1]
+    s22 = sparams[:,2,2]
+    z0 = sparams.z0[1,1,1] # Assume z0 is constant for all ports - this could be extended in the future.
+    abcd = zeros(sparams.s)
+    abcd[:,1,1] = (1 .+ s11).*(1 .- s22) .+ s12.*s21 ./ (2.0 .* s21)
+    abcd[:,1,2] = z0 .* (1 .+ s11).*(1 .+ s22) .- s12.*s21 ./ (2.0 .* s21)
+    abcd[:,2,1] = (1/z0) .* (1 .- s11).*(1 .- s22) .- s12.*s21 ./ (2.0 .* s21)
+    abcd[:,2,2] = (1 .- s11).*(1 .+ s22) .+ s12.*s21 ./ (2.0 .* s21)
+    ABCDParameters(abcd, copy(sparams.f))
+end
+
+function ABCDParameters(zparams::ZParameters)
+    z11 = zparams[:,1,1]
+    z12 = zparams[:,1,2]
+    z21 = zparams[:,2,1]
+    z22 = zparams[:,2,2]
+    abcd = zeros(zparams.s)
+    abcd[:,1,1] = z11 ./ z21
+    abcd[:,1,2] = (z11.*z22 .- z12.*z21) ./ z21
+    abcd[:,2,1] = 1.0 ./ z21
+    abcd[:,2,2] = z22 ./ z21
+    ABCDParameters(abcd, copy(zparams.f))
+end
+
 function SParameters(abcd::ABCDParameters; z0=50)
-    a = abcd[:,1,1]
-    b = abcd[:,1,2]
-    c = abcd[:,2,1]
-    d = abcd[:,2,2]
-    s = zeros(abcd)
+    a = abcd.abcd[:,1,1]
+    b = abcd.abcd[:,1,2]
+    c = abcd.abcd[:,2,1]
+    d = abcd.abcd[:,2,2]
+    s = zeros(abcd.abcd)
     s[:,1,1] = (a .+ b ./ z0 .- c .* z0 .- d) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
     s[:,1,2] = 2.0 .*(a .* d .- b .* c) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
     s[:,2,1] = 2.0 ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
