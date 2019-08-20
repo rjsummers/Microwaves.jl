@@ -41,18 +41,18 @@ mutable struct TParameters <: Network
     f::Vector{Float64}
 end
 
-# function SParameters(abcd::ABCDParameters; z0=50)
-#     a = abcd(:,1,1)
-#     b = abcd(:,1,2)
-#     c = abcd(:,2,1)
-#     d = abcd(:,2,2)
-#     s = zeros(abcd)
-#     s(:,1,1) = (a + b / z0 - c * z0 - d) / (a + b / z0 + c * z0 + d)
-#     s(:,1,2) = 2*(a * d - b * c) / (a + b / z0 + c * z0 + d)
-#     s(:,2,1) = 2 / (a + b / z0 + c * z0 + d)
-#     s(:,2,2) = (-a + b / z0 - c * z0 + d) / (a + b / z0 + c * z0 + d)
-#     z0arr = ones(size(abcd)) * z0
-#     SParameters(s, copy(abcd.f), z0)
-# end
+function SParameters(abcd::ABCDParameters; z0=50)
+    a = abcd[:,1,1]
+    b = abcd[:,1,2]
+    c = abcd[:,2,1]
+    d = abcd[:,2,2]
+    s = zeros(abcd)
+    s[:,1,1] = (a .+ b ./ z0 .- c .* z0 .- d) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
+    s[:,1,2] = 2.0 .*(a .* d .- b .* c) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
+    s[:,2,1] = 2.0 ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
+    s[:,2,2] = (-a .+ b ./ z0 .- c .* z0 .+ d) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
+    z0arr = ones(size(abcd)) .* z0
+    SParameters(s, copy(abcd.f), z0)
+end
 
 end # module
