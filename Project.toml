@@ -2,3 +2,5 @@ name = "RFTools"
 uuid = "481e76ae-c2a1-11e9-35e0-4d409117bccf"
 authors = ["Summers, Randall J. <rsummers@ou.edu>"]
 version = "0.1.0"
+
+[deps]
