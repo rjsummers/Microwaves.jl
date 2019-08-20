@@ -31,7 +31,7 @@ function blackman(N::Int64)
     window
 end
 
-function hamming(N:Int64)
+function hamming(N::Int64)
     window = zeros(N)
     for n=0:(N-1)
         window[n+1] = 0.54 - 0.46*cos(2*π*n/(N-1))
