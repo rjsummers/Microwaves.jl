@@ -182,4 +182,13 @@ function ZParameters(y::YParameters)
     ZParameters(z, copy(y.f))
 end
 
+function YParameters(s::SParameters)
+    y = zeros(s.s)
+    syarr = inv(I * sqrt.(s.z0))
+    for i=1:size(y.y)[1]
+        y[i,:,:] = syarr * (I - s.s[i,:,:]) * inv(I + s.s[i,:,:]) * syarr
+    end
+    YParameters(y, copy(y.f))
+end
+
 end # module
