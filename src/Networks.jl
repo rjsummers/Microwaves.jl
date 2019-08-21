@@ -174,4 +174,12 @@ function ZParameters(abcd::ABCDParameters)
     ZParameters(z, copy(abcd.f))
 end
 
+function ZParameters(y::YParameters)
+    z = zeros(y.y)
+    for i=1:size(z)[2]
+        z[i,:,:] = inv(y.y[i,:,:])
+    end
+    ZParameters(z, copy(y.f))
+end
+
 end # module
