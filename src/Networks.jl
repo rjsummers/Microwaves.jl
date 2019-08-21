@@ -7,7 +7,7 @@ mutable struct SParameters <: Network
     f::Vector{Float64}
     z0::Vector{ComplexF64}
     function SParameters(s, f, z0::Real)
-        new(s, f, ones(size(s)[end]).*z0)
+        new(s, f, ones(size(s)[2]).*z0)
     end
 end
 
@@ -75,6 +75,7 @@ function TParameters(t11, t12, t21, t22, f)
     t = cat(cat(t11, t21, dims=2), cat(t12, t22, dims=2), dims=3)
     TParameters(t, f)
 end
+
 function SParameters(abcd::ABCDParameters; z0=50)
     a = abcd.abcd[:,1,1]
     b = abcd.abcd[:,1,2]
