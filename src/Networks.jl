@@ -75,6 +75,19 @@ function TParameters(t11, t12, t21, t22, f)
     t = cat(cat(t11, t21, dims=2), cat(t12, t22, dims=2), dims=3)
     TParameters(t, f)
 end
+function SParameters(abcd::ABCDParameters; z0=50)
+    a = abcd.abcd[:,1,1]
+    b = abcd.abcd[:,1,2]
+    c = abcd.abcd[:,2,1]
+    d = abcd.abcd[:,2,2]
+    s = zeros(abcd.abcd)
+    s[:,1,1] = (a .+ b ./ z0 .- c .* z0 .- d) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
+    s[:,1,2] = 2.0 .*(a .* d .- b .* c) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
+    s[:,2,1] = 2.0 ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
+    s[:,2,2] = (-a .+ b ./ z0 .- c .* z0 .+ d) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
+    z0arr = ones(size(abcd)) .* z0
+    SParameters(s, copy(abcd.f), z0)
+end
 
 function ABCDParameters(sparams::SParameters)
     s11 = sparams[:,1,1]
@@ -114,20 +127,6 @@ function ABCDParameters(yparams::YParameters)
     abcd[:,2,1] = -(y11.*y22 .- y12.*y21) ./ y21
     abcd[:,2,2] = -y11 ./ y21
     ABCDParameters(abcd, copy(yparams.f))
-end
-
-function SParameters(abcd::ABCDParameters; z0=50)
-    a = abcd.abcd[:,1,1]
-    b = abcd.abcd[:,1,2]
-    c = abcd.abcd[:,2,1]
-    d = abcd.abcd[:,2,2]
-    s = zeros(abcd.abcd)
-    s[:,1,1] = (a .+ b ./ z0 .- c .* z0 .- d) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
-    s[:,1,2] = 2.0 .*(a .* d .- b .* c) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
-    s[:,2,1] = 2.0 ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
-    s[:,2,2] = (-a .+ b ./ z0 .- c .* z0 .+ d) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
-    z0arr = ones(size(abcd)) .* z0
-    SParameters(s, copy(abcd.f), z0)
 end
 
 end # module
