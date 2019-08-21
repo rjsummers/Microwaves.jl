@@ -152,4 +152,13 @@ function ABCDParameters(yparams::YParameters)
     ABCDParameters(abcd, copy(yparams.f))
 end
 
+function ZParameters(s::SParameters)
+    z = zeros(s.s)
+    szarr = I * sqrt.(s.z0)
+    for i=1:size(z.z)[1]
+        z[i,:,:] = szarr * (I + s.s[i,:,:]) * inv(I - s.s[i,:,:]) * szarr
+    end
+    ZParameters(z, copy(z.f))
+end
+
 end # module
