@@ -94,12 +94,22 @@ end
 
 function SParameters(z::ZParameters; z0=50)
     s = zeros(z.z)
-    z0vec = z0*Vector(ones(size(z.z)[2]))
+    z0vec = z0.*Vector(ones(size(z.z)[2]))
     syarr = inv(I * sqrt.(z0vec))
     for i=1:size(z.z)[1]
         s[i,:,:] = (syarr * z.z[i,:,:] * syarr - I)*inv(syarr * z.z[i,:,:] * syarr + I)
     end
     SParameters(s, copy(z.f), z0)
+end
+
+function SParameters(y::YParameters; z0=50)
+    s = zeros(y.y)
+    z0vec = z0.*Vector(ones(size(y.y)[2]))
+    szarr = I * sqrt.(z0vec)
+    for i=1:size(y.y)[1]
+        s[i,:,:] = (I - szarr * y.y[i,:,:] * szarr)*inv(I + szarr * y.y[i,:,:] * szarr)
+    end
+    SParameters(s, copy(y.f), z0)
 end
 
 function ABCDParameters(sparams::SParameters)
