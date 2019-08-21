@@ -161,4 +161,17 @@ function ZParameters(s::SParameters)
     ZParameters(z, copy(z.f))
 end
 
+function ZParameters(abcd::ABCDParameters)
+    a = abcd.abcd[:,1,1]
+    b = abcd.abcd[:,1,2]
+    c = abcd.abcd[:,2,1]
+    d = abcd.abcd[:,2,2]
+    z = zeros(abcd.abcd)
+    z[:,1,1] = a ./ c
+    z[:,1,2] = (a.*d .- b.*c) ./ c
+    z[:,2,1] = 1.0 ./ c
+    z[:,2,2] = d ./ c
+    ZParameters(z, copy(abcd.f))
+end
+
 end # module
