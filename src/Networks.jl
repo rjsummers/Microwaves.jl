@@ -5,9 +5,9 @@ abstract type Network end
 mutable struct SParameters <: Network
     s::Array{ComplexF64}
     f::Vector{Float64}
-    z0::Array{ComplexF64}
+    z0::Vector{ComplexF64}
     function SParameters(s, f, z0::Real)
-        new(s, f, ones(size(s))*z0)
+        new(s, f, ones(size(s)[end]).*z0)
     end
 end
 
@@ -66,6 +66,19 @@ function ABCDParameters(zparams::ZParameters)
     abcd[:,2,1] = 1.0 ./ z21
     abcd[:,2,2] = z22 ./ z21
     ABCDParameters(abcd, copy(zparams.f))
+end
+
+function ABCDParameters(yparams::YParameters)
+    y11 = yparams[:,1,1]
+    y12 = yparams[:,1,2]
+    y21 = yparams[:,2,1]
+    y22 = yparams[:,2,2]
+    abcd = zeros(yparams.s)
+    abcd[:,1,1] = -y22 ./ y11
+    abcd[:,1,2] = -1.0 ./ y21
+    abcd[:,2,1] = -(y11.*y22 .- y12.*y21) ./ y21
+    abcd[:,2,2] = -y11 ./ y21
+    ABCDParameters(abcd, copy(yparams.f))
 end
 
 function SParameters(abcd::ABCDParameters; z0=50)
