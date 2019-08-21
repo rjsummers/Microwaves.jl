@@ -1,5 +1,7 @@
 module Networks
 
+using LinearAlgebra
+
 abstract type Network end
 
 mutable struct SParameters <: Network
@@ -88,6 +90,16 @@ function SParameters(abcd::ABCDParameters; z0=50)
     s[:,2,2] = (-a .+ b ./ z0 .- c .* z0 .+ d) ./ (a .+ b ./ z0 .+ c .* z0 .+ d)
     z0arr = ones(size(abcd)) .* z0
     SParameters(s, copy(abcd.f), z0)
+end
+
+function SParameters(z::ZParameters; z0=50)
+    s = zeros(z.z)
+    z0vec = z0*Vector(ones(size(z.z)[2]))
+    syarr = inv(I * sqrt.(z0vec))
+    for i=1:size(z.z)[1]
+        s[i,:,:] = (syarr * z.z[i,:,:] * syarr - I)*inv(syarr * z.z[i,:,:] * syarr + I)
+    end
+    SParameters(s, copy(z.f), z0)
 end
 
 function ABCDParameters(sparams::SParameters)
