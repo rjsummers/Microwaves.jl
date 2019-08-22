@@ -191,4 +191,12 @@ function YParameters(s::SParameters)
     YParameters(y, copy(y.f))
 end
 
+function YParameters(z::ZParameters)
+    y = zeros(z.z)
+    for i=1:size(z)[2]
+        y[i,:,:] = inv(z.z[i,:,:])
+    end
+    YParameters(y, copy(z.f))
+end
+
 end # module
