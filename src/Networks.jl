@@ -5,6 +5,9 @@ using LinearAlgebra
 abstract type Network end
 
 mutable struct SParameters <: Network
+    """
+    S-parameters of a network.
+    """
     s::Array{ComplexF64}
     f::Vector{Float64}
     z0::Vector{ComplexF64}
@@ -14,31 +17,49 @@ mutable struct SParameters <: Network
 end
 
 mutable struct ABCDParameters <: Network
+    """
+    ABCD-parameters of a network.
+    """
     abcd::Array{ComplexF64}
     f::Vector{Float64}
 end
 
 mutable struct ZParameters <: Network
+    """
+    Z-parameters of a network.
+    """
     z::Array{ComplexF64}
     f::Vector{Float64}
 end
 
 mutable struct YParameters <: Network
+    """
+    Y-parameters of a network.
+    """
     y::Array{ComplexF64}
     f::Vector{Float64}
 end
 
 mutable struct HParameters <: Network
+    """
+    H-parameters of a network.
+    """
     h::Array{ComplexF64}
     f::Vector{Float64}
 end
 
 mutable struct GParameters <: Network
+    """
+    G-parameters of a network.
+    """
     g::Array{ComplexF64}
     f::Vector{Float64}
 end
 
 mutable struct TParameters <: Network
+    """
+    T-parameters of a network.
+    """
     t::Array{ComplexF64}
     f::Vector{Float64}
 end
