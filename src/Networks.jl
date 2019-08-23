@@ -233,22 +233,16 @@ function YParameters(z::ZParameters)
 end
 
 function read_touchstone(filename::String)
-    function reshape_v1_data(data)
-        nports = floor(Int64, sqrt(length(data)))
-        reshaped_data = zeros(ComplexF64, nports, nports)
-        if nports == 1
-            reshaped_data[1,1] = data[1]
-        elseif nports == 2
-            reshaped_data[1,1] = data[1]
-            reshaped_data[2,1] = data[2]
-            reshaped_data[1,2] = data[3]
-            reshaped_data[2,2] = data[4]
-        else
-            reshaped_data = transpose(reshape(data, nports, nports))
+    function combine_nums(x::Real, y::Real, format::String)
+        if format == "DB"
+            return (10^(x/20)) * exp(1im * y * π / 180)
+        elseif format == "MA"
+            return x * exp(1im * y * π / 180)
+        elseif format == "RI"
+            return complex(x, y)
         end
-        reshaped_data
     end
-    
+
     open(filename) do file
         lnum = 1
         version = -1
@@ -263,7 +257,7 @@ function read_touchstone(filename::String)
         # Properties specified in option line
         funit = -1
         parameter = -1
-        format() = nothing
+        format = -1
         z0 = -1
         
         # Properties specified for version 2.0
@@ -294,11 +288,11 @@ function read_touchstone(filename::String)
                 if length(data) == freq_row_length
                     push!(freq, data[1] * funit)
                     for i=2:2:(length(data) - 1)
-                        push!(data_vector, format(data[i], data[i + 1]))
+                        push!(data_vector, combine_nums(data[i], data[i + 1], format))
                     end
                 else
                     for i=1:2:(length(data) - 1)
-                        push!(data_vector, format(data[i], data[i + 1]))
+                        push!(data_vector, combine_nums(data[i], data[i + 1], format))
                     end
                 end
             else
@@ -313,7 +307,6 @@ function read_touchstone(filename::String)
                 
                 # Parse the options line.
                 if row[1] == '#'
-                    format_unset = true
                     next_option_is_z0 = false
                     for option=split(row, " ")[2:end]
                         if option == "Hz"
@@ -327,14 +320,11 @@ function read_touchstone(filename::String)
                         elseif occursin(option, "SZYHG")
                             parameter = option
                         elseif option == "DB"
-                            format(x, y) = (10^(x/20)) * exp(1im * y * π / 180)
-                            format_unset = false
+                            format = string(option)
                         elseif option == "MA"
-                            format(x, y) = x * exp(1im * y * π / 180)
-                            format_unset = false
+                            format = string(option)
                         elseif option == "RI"
-                            format(x, y) = complex(x, y)
-                            format_unset = false
+                            format = string(option)
                         elseif option == "R"
                             next_option_is_z0 = true
                         elseif next_option_is_z0
@@ -349,8 +339,8 @@ function read_touchstone(filename::String)
                     if parameter == -1
                         parameter = "S"
                     end
-                    if format_unset
-                        format(x, y) = x * exp(1im * y * π / 180)
+                    if format == -1
+                        format = "MA"
                     end
                     if z0 == -1
                         z0 = 50
