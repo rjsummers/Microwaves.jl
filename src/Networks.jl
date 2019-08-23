@@ -191,6 +191,18 @@ function YParameters(s::SParameters)
     YParameters(y, copy(y.f))
 end
 
+function YParameters(abcd::ABCDParameters)
+    a = abcd.abcd[:,1,1]
+    b = abcd.abcd[:,1,2]
+    c = abcd.abcd[:,2,1]
+    d = abcd.abcd[:,2,2]
+    y = zeros(abcd.abcd)
+    y[:,1,1] = d ./ b
+    y[:,1,2] = (b.*c .- a.*d) ./ b
+    y[:,2,1] = -1.0 ./ b
+    y[:,2,2] =  a ./ b
+end
+
 function YParameters(z::ZParameters)
     y = zeros(z.z)
     for i=1:size(z)[2]
