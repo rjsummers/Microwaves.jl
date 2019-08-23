@@ -232,4 +232,205 @@ function YParameters(z::ZParameters)
     YParameters(y, copy(z.f))
 end
 
+function read_touchstone(filename::String)
+    function reshape_v1_data(data)
+        nports = floor(Int64, sqrt(length(data)))
+        reshaped_data = zeros(ComplexF64, nports, nports)
+        if nports == 1
+            reshaped_data[1,1] = data[1]
+        elseif nports == 2
+            reshaped_data[1,1] = data[1]
+            reshaped_data[2,1] = data[2]
+            reshaped_data[1,2] = data[3]
+            reshaped_data[2,2] = data[4]
+        else
+            reshaped_data = transpose(reshape(data, nports, nports))
+        end
+        reshaped_data
+    end
+    
+    open(filename) do file
+        lnum = 1
+        version = -1
+        reading_reference = false
+        refs_read = 0
+        network_data_started = false
+        
+        # Only for version 1 parsing
+        first_data_row = true
+        freq_row_length = -1
+        
+        # Properties specified in option line
+        funit = -1
+        parameter = -1
+        format() = nothing
+        z0 = -1
+        
+        # Properties specified for version 2.0
+        nports = -1
+        two_port_order = -1
+        nfreq = -1
+        nnoisefreq = -1
+        mformat = "Full"
+        
+        freq = Vector{Float64}(undef, 0)
+        data_vector = Vector{ComplexF64}(undef, 0)
+        
+        for row=eachline(file)
+            # Get rid of blank lines and comments.
+            row = strip(split(row, "!")[1])
+            if isempty(row)
+                continue
+            end
+            
+            if network_data_started && (version == 1.0)
+                data = parse.(Float64, split(row, " "))
+                
+                if first_data_row
+                    freq_row_length = length(data)
+                    first_data_row = false
+                end
+                
+                if length(data) == freq_row_length
+                    push!(freq, data[1] * funit)
+                    for i=2:2:(length(data) - 1)
+                        push!(data_vector, format(data[i], data[i + 1]))
+                    end
+                else
+                    for i=1:2:(length(data) - 1)
+                        push!(data_vector, format(data[i], data[i + 1]))
+                    end
+                end
+            else
+                # Deal with 1st line and its implications for parsing.
+                if lnum == 1
+                    if row[1] == '#' 
+                        version = 1.0
+                    elseif split(row, " ")[1] == "[Version]"
+                        version = parse(Float64, split(row, " ")[2])
+                    end
+                end
+                
+                # Parse the options line.
+                if row[1] == '#'
+                    format_unset = true
+                    next_option_is_z0 = false
+                    for option=split(row, " ")[2:end]
+                        if option == "Hz"
+                            funit = 1e0
+                        elseif option == "kHz"
+                            funit = 1e3
+                        elseif option == "MHz"
+                            funit = 1e6
+                        elseif option == "GHz"
+                            funit = 1e9
+                        elseif occursin(option, "SZYHG")
+                            parameter = option
+                        elseif option == "DB"
+                            format(x, y) = (10^(x/20)) * exp(1im * y * π / 180)
+                            format_unset = false
+                        elseif option == "MA"
+                            format(x, y) = x * exp(1im * y * π / 180)
+                            format_unset = false
+                        elseif option == "RI"
+                            format(x, y) = complex(x, y)
+                            format_unset = false
+                        elseif option == "R"
+                            next_option_is_z0 = true
+                        elseif next_option_is_z0
+                            z0 = parse(Float64, option)
+                            next_option_is_z0 = false
+                        end
+                    end
+                    # Set default options if unspecified in options line.
+                    if funit == -1
+                        funit = 1e9 # Default to GHz
+                    end
+                    if parameter == -1
+                        parameter = "S"
+                    end
+                    if format_unset
+                        format(x, y) = x * exp(1im * y * π / 180)
+                    end
+                    if z0 == -1
+                        z0 = 50
+                    end
+                    if version == 1.0
+                        network_data_started = true
+                    end
+                end
+                
+                if version == 2.0
+                    if occursin("[Number of Ports]", row)
+                        nports = parse(Int64, split(row, " ")[end])
+                    end
+                    if occursin("[Two-Port Data Order]", row) && (nports == 2)
+                        two_port_order = split(row, " ")[end]
+                    end
+                    if occursin("[Number of Frequencies]", row)
+                        nfreq = parse(Int64, split(row, " ")[end])
+                    end
+                    if occursin("[Number of Noise Frequencies]", row)
+                        nnoisefreq = parse(Int64, split(row, " ")[end])
+                    end
+                    if occursin("[Reference]", row)
+                        reading_reference = true
+                        z0 = zeros(nports)
+                        refs = split(row, " ")[2:end]
+                        for i=2:length(refs)
+                            z0[i] = parse(Float64, refs[i])
+                            refs_read += 1
+                        end
+                        if refs_read == nports
+                            reading_reference = false
+                        end
+                    end
+                    if occursin("[Matrix Format]", row)
+                        mformat = split(row, " ")[end]
+                    end
+                    if occursin("[Network Data]", row)
+                        network_data_started = true
+                    end
+                end # if version == 2.0
+                
+                if reading_reference
+                    refs = split(row, " ")
+                    for i=1:length(refs)
+                        z0[refs_read + 1] = parse(Float64, refs[i])
+                        refs_read == 1
+                    end
+                    if refs_read == nports
+                        reading_reference = false
+                    end
+                end
+            end # else for header reading
+            lnum = lnum + 1
+        end # for
+        
+        if version == 1.0
+            nfreq = length(freq)
+            nports = floor(Int64, sqrt(length(data_vector) / nfreq))
+            if nports^2 * nfreq != length(data_vector)
+                error("Data points do not match frequencies.")
+            end
+            if nports == 1
+                data = reshape(data_vector, nfreq, 1, 1)
+            elseif nports == 2
+                data = zeros(ComplexF64, nfreq, 2, 2)
+                for i=1:nfreq
+                    data[i,1,1] = data_vector[4*(i-1) + 1]
+                    data[i,2,1] = data_vector[4*(i-1) + 2]
+                    data[i,1,2] = data_vector[4*(i-1) + 3]
+                    data[i,2,2] = data_vector[4*(i-1) + 4]
+                end
+            end
+        end
+        
+        if parameter == "S"
+            net = SParameters(data, freq, z0)
+        end
+        net
+    end
+end
+
 end # module
