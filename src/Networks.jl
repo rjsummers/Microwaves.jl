@@ -259,6 +259,9 @@ function read_touchstone(filename::String)
         # Only for version 1 parsing
         first_data_row = true
         freq_row_length = -1
+
+        # Only for version 2 parsing
+        npts = 0
         
         # Properties specified in option line
         funit = -1
@@ -283,7 +286,16 @@ function read_touchstone(filename::String)
                 continue
             end
             
-            if network_data_started && (version == 1.0)
+            if network_data_started && (version == 2.0)
+                if in('[', row)
+                    network_data_started = false
+                    continue
+                end
+                data = parse.(Float64, split(row, " "))
+
+                if mformat == "Full"
+                end
+            elseif network_data_started && (version == 1.0)
                 data = parse.(Float64, split(row, " "))
                 
                 if first_data_row
@@ -386,6 +398,8 @@ function read_touchstone(filename::String)
                     end
                     if occursin("[Network Data]", row)
                         network_data_started = true
+                        freq = Vector{Float64}(undef, nfreq)
+                        data_vector = Vector{ComplexF64}(undef, nfreq * nports^2)
                     end
                 end # if version == 2.0
                 
