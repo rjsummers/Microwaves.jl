@@ -3,7 +3,6 @@ __precompile__(true)
 module RFTools
 
 include("Networks.jl")
-include("Windows.jl")
 
 function voltage_gain(x::Number, units::Symbol)
     if units == :power
