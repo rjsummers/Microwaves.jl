@@ -45,6 +45,7 @@ function Np(x::Number, units::Symbol)
         return log(sqrt(x))
     elseif units == :dB
         return (1.0/20.0) * log(10) * x
+    end
 end
 
 end # module
