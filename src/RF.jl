@@ -3,6 +3,7 @@ __precompile__(true)
 module RF
 
 include("Networks.jl")
+include("Radar.jl")
 
 function voltage_gain(x::Number, units::Symbol)
     if units == :power
