@@ -7,7 +7,8 @@ c_0 = Unitful.ustrip(SpeedOfLightInVacuum)
 
 function range(return_time::Real)
     """
-    Returns the range to a target in meters, given the return time.
+    Returns the range to a target in meters, given the return time in
+    seconds.
     """
     c_0 * return_time / 2
 end
