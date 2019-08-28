@@ -98,9 +98,9 @@ function GParameters(g11, g12, g21, g22, f)
     HParameters(g, f)
 end
 
-function TParameters(t11, t12, t21, t22, f)
+function TParameters(t11, t12, t21, t22, f; z0=50)
     t = cat(cat(t11, t21, dims=2), cat(t12, t22, dims=2), dims=3)
-    TParameters(t, f)
+    TParameters(t, f, z0)
 end
 
 function SParameters(abcd::ABCDParameters; z0=50)
