@@ -5,6 +5,13 @@ using PhysicalConstants.CODATA2018
 
 c_0 = Unitful.ustrip(SpeedOfLightInVacuum)
 
+function range(return_time::Real)
+    """
+    Returns the range to a target in meters, given the return time.
+    """
+    c_0 * return_time / 2
+end
+
 function unambiguous_range(prf::Real)
     """
     Returns the maximum unambiguous range in meters given
