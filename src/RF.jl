@@ -1,6 +1,6 @@
 __precompile__(true)
 
-module RFTools
+module RF
 
 include("Networks.jl")
 
