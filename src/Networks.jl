@@ -62,6 +62,10 @@ mutable struct TParameters <: Network
     """
     t::Array{ComplexF64}
     f::Vector{Float64}
+    z0::Vector{ComplexF64}
+    function SParameters(s, f, z0::Real)
+        new(s, f, ones(size(s)[2]).*z0)
+    end
 end
 
 function SParameters(s11, s12, s21, s22, f; z0=50)
