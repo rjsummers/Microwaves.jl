@@ -20,6 +20,10 @@ function Γ_out(net::Network, Γ_S::Vector{Complex})
     sparams.s[:,2,2] .+ (sparams.s[:,1,2] .* sparams.s[:,2,1] .* Γ_S) ./ (1 .- sparams.s[:,1,1] .* Γ_S)
 end
 
+"""
+Returns the power gain of a two port network with a reflection coefficient Γ_L
+appearing looking out of port 2.
+"""
 function power_gain(net::Network, Γ_L::Vector{Complex})
     s = SParameters(net)
     num = abs.(s.s[:,2,1]).^2 .* (1 .- abs.(Γ_L).^2)
@@ -27,6 +31,10 @@ function power_gain(net::Network, Γ_L::Vector{Complex})
     num ./ den
 end
 
+"""
+Returns the available power gain of a two port network with a reflection
+coefficient Γ_S appearing looking out of port 1.
+"""
 function available_power_gain(net::Network, Γ_S::Vector{Complex})
     s = SParameters(net)
     num = abs.(s.s[:,2,1]).^2 .* (1 .- abs.(Γ_S).^2)
@@ -34,6 +42,11 @@ function available_power_gain(net::Network, Γ_S::Vector{Complex})
     num ./ den
 end
 
+"""
+Returns the transducer power gain of a two port network with a reflection
+coefficient Γ_S appearing looking out of port 1 and a reflection coefficient
+Γ_L appearing looking out of port 2.
+"""
 function transducer_power_gain(net::Network, Γ_S::Vector{Complex}, Γ_L::Vector{Complex})
     s = SParameters(net)
     num = abs.(s.s[:,2,1]).^2 .* (1 .- abs.(Γ_S).^2) .* (1 .- abs.(Γ_L).^2)
