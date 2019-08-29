@@ -15,6 +15,8 @@ end
 function power_gain(net::Network, Γ_L::Vector{Complex})
     s = SParameters(net)
     num = abs.(s.s[:,2,1]).^2 .* (1 .- abs.(Γ_L).^2)
+    den = (1 .- abs.(Γ_in(s, Γ_L)).^2) .* abs.(1 .- s.s[:,2,2] .* Γ_L).^2
+    num ./ den
 end
 
 end # module
