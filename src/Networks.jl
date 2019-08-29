@@ -4,10 +4,10 @@ using LinearAlgebra
 
 abstract type Network end
 
+"""
+S-parameters of a network.
+"""
 mutable struct SParameters <: Network
-    """
-    S-parameters of a network.
-    """
     s::Array{ComplexF64}
     f::Vector{Float64}
     z0::Vector{ComplexF64}
@@ -16,50 +16,50 @@ mutable struct SParameters <: Network
     end
 end
 
+"""
+ABCD-parameters of a network.
+"""
 mutable struct ABCDParameters <: Network
-    """
-    ABCD-parameters of a network.
-    """
     abcd::Array{ComplexF64}
     f::Vector{Float64}
 end
 
+"""
+Z-parameters of a network.
+"""
 mutable struct ZParameters <: Network
-    """
-    Z-parameters of a network.
-    """
     z::Array{ComplexF64}
     f::Vector{Float64}
 end
 
+"""
+Y-parameters of a network.
+"""
 mutable struct YParameters <: Network
-    """
-    Y-parameters of a network.
-    """
     y::Array{ComplexF64}
     f::Vector{Float64}
 end
 
+"""
+H-parameters of a network.
+"""
 mutable struct HParameters <: Network
-    """
-    H-parameters of a network.
-    """
     h::Array{ComplexF64}
     f::Vector{Float64}
 end
 
+"""
+G-parameters of a network.
+"""
 mutable struct GParameters <: Network
-    """
-    G-parameters of a network.
-    """
     g::Array{ComplexF64}
     f::Vector{Float64}
 end
 
+"""
+T-parameters of a network.
+"""
 mutable struct TParameters <: Network
-    """
-    T-parameters of a network.
-    """
     t::Array{ComplexF64}
     f::Vector{Float64}
     z0::Vector{ComplexF64}
@@ -236,13 +236,13 @@ function YParameters(z::ZParameters)
     YParameters(y, copy(z.f))
 end
 
-function read_touchstone(filename::String)
-    """
-    Reads a touchstone file and returns a corresponding network object.
+"""
+Reads a touchstone file and returns a corresponding network object.
 
-    Currently, only works on 1 and 2 port version 1 files with s-parameters,
-    with a broadening of capability coming in the near future.
-    """
+Currently, only works on 1 and 2 port version 1 files with s-parameters,
+with a broadening of capability coming in the near future.
+"""
+function read_touchstone(filename::String)
     function combine_nums(x::Real, y::Real, format::String)
         if format == "DB"
             return (10^(x/20)) * exp(1im * y * π / 180)
@@ -259,37 +259,37 @@ function read_touchstone(filename::String)
         reading_reference = false
         refs_read = 0
         network_data_started = false
-        
+
         # Only for version 1 parsing
         first_data_row = true
         freq_row_length = -1
 
         # Only for version 2 parsing
         npts = 0
-        
+
         # Properties specified in option line
         funit = -1
         parameter = -1
         format = -1
         z0 = -1
-        
+
         # Properties specified for version 2.0
         nports = -1
         two_port_order = -1
         nfreq = -1
         nnoisefreq = -1
         mformat = "Full"
-        
+
         freq = Vector{Float64}(undef, 0)
         data_vector = Vector{ComplexF64}(undef, 0)
-        
+
         for row=eachline(file)
             # Get rid of blank lines and comments.
             row = strip(split(row, "!")[1])
             if isempty(row)
                 continue
             end
-            
+
             if network_data_started && (version == 2.0)
                 if in('[', row)
                     network_data_started = false
@@ -301,12 +301,12 @@ function read_touchstone(filename::String)
                 end
             elseif network_data_started && (version == 1.0)
                 data = parse.(Float64, split(row, " "))
-                
+
                 if first_data_row
                     freq_row_length = length(data)
                     first_data_row = false
                 end
-                
+
                 if length(data) == freq_row_length
                     push!(freq, data[1] * funit)
                     for i=2:2:(length(data) - 1)
@@ -320,13 +320,13 @@ function read_touchstone(filename::String)
             else
                 # Deal with 1st line and its implications for parsing.
                 if lnum == 1
-                    if row[1] == '#' 
+                    if row[1] == '#'
                         version = 1.0
                     elseif split(row, " ")[1] == "[Version]"
                         version = parse(Float64, split(row, " ")[2])
                     end
                 end
-                
+
                 # Parse the options line.
                 if row[1] == '#'
                     next_option_is_z0 = false
@@ -371,7 +371,7 @@ function read_touchstone(filename::String)
                         network_data_started = true
                     end
                 end
-                
+
                 if version == 2.0
                     if occursin("[Number of Ports]", row)
                         nports = parse(Int64, split(row, " ")[end])
@@ -406,7 +406,7 @@ function read_touchstone(filename::String)
                         data_vector = Vector{ComplexF64}(undef, nfreq * nports^2)
                     end
                 end # if version == 2.0
-                
+
                 if reading_reference
                     refs = split(row, " ")
                     for i=1:length(refs)
@@ -420,7 +420,7 @@ function read_touchstone(filename::String)
             end # else for header reading
             lnum = lnum + 1
         end # for
-        
+
         if version == 1.0
             nfreq = length(freq)
             nports = floor(Int64, sqrt(length(data_vector) / nfreq))
@@ -439,7 +439,7 @@ function read_touchstone(filename::String)
                 end
             end
         end
-        
+
         if parameter == "S"
             net = SParameters(data, freq, z0)
         end

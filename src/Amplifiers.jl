@@ -2,20 +2,20 @@ module Amplifiers
 
 using ..RF.Networks: Network, SParameters
 
+"""
+Returns the input reflection coefficient of a two-port network with
+a reflection coefficient Γ_L appearing looking out of port 2.
+"""
 function Γ_in(net::Network, Γ_L::Vector{Complex})
-    """
-    Returns the input reflection coefficient of a two-port network with
-    a reflection coefficient Γ_L appearing looking out of port 2.
-    """
     sparams = SParameters(net)
     sparams.s[:,1,1] .+ (sparams.s[:,1,2] .* sparams.s[:,2,1] .* Γ_L) ./ (1 .- sparams.s[:,2,2] .* Γ_L)
 end
 
+"""
+Returns the output (port 2) reflection coefficient of a two-port network
+with a reflection coefficient Γ_S appearing looking out of port 1.
+"""
 function Γ_out(net::Network, Γ_S::Vector{Complex})
-    """
-    Returns the output (port 2) reflection coefficient of a two-port network
-    with a reflection coefficient Γ_S appearing looking out of port 1.
-    """
     sparams = SParameters(net)
     sparams.s[:,2,2] .+ (sparams.s[:,1,2] .* sparams.s[:,2,1] .* Γ_S) ./ (1 .- sparams.s[:,1,1] .* Γ_S)
 end
