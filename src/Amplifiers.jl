@@ -33,11 +33,21 @@ function transducer_power_gain(net::Network, Γ_S::Vector{Complex}, Γ_L::Vector
     num ./ den
 end
 
-function μ_test(net::Network)
+function μ_test(net::Network; retmu=false)
     s = SParameters(net)
     Δ = s.s[:,1,1] .* s.s[:,2,2] .- s.s[:,1,2] .* s.s[:,2,1]
     μ = (1 .- abs.(s.s[:,1,1]).^2) ./ (abs.(s.s[:,2,2] .- Δ .* conj.(s.s[:,1,1])) .+
                                        abs.(s.s[:,1,2] .* s.s[:,2,1]))
+    result = true
+    for muval=μ
+        if muval <= 1
+            result = false
+        end
+    end
+    if retmu
+        return result, μ
+    end
+    result
 end
 
 end # module
