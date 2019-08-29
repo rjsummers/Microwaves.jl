@@ -19,11 +19,13 @@ function power_gain(net::Network, Γ_L::Vector{Complex})
     num ./ den
 end
 
-function available_power_gain(net::Network, Γ_S::Vector{Complex}, Γ_L::Vector{Complex})
+function available_power_gain(net::Network, Γ_S::Vector{Complex})
     s = SParameters(net)
     num = abs.(s.s[:,2,1]).^2 .* (1 .- abs.(Γ_S).^2)
-    den = abs.(1 .- s.s[:,1,1] .* Γ_in(s, Γ_L)).^2 .* (1 .- Γ_out(s, Γ_S).^2)
+    den = abs.(1 .- s.s[:,1,1] .* Γ_s).^2 .* (1 .- Γ_out(s, Γ_S).^2)
     num ./ den
 end
+
+function transducer_power_gain(net::Network, Γ_)
 
 end # module
