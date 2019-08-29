@@ -1,6 +1,6 @@
 module Amplifiers
 
-using ..RF: Networks
+using ..RF.Networks: Network, SParameters
 
 function Γ_in(net::Network, Γ_L::Vector{Complex})
     sparams = SParameters(net)
@@ -13,7 +13,8 @@ function Γ_out(net::Network, Γ_S::Vector{Complex})
 end
 
 function power_gain(net::Network, Γ_L::Vector{Complex})
-    s = Sparameters(net)
+    s = SParameters(net)
+    num = abs.(s.s[:,2,1]).^2 .* (1 .- abs.(Γ_L).^2)
 end
 
 end # module
