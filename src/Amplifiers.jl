@@ -54,6 +54,17 @@ function transducer_power_gain(net::Network, Γ_S::Vector{Complex}, Γ_L::Vector
     num ./ den
 end
 
+"""
+Performs the μ-test for unconditional stability of a two-port network 'net'.
+
+A network is unconditionally stable if μ > 1, and larger values of μ correspond
+to greater stability.
+
+Returns true if the network is unconditionally stable at all frequencies that
+network parameters have been specified for.
+
+If retmu is set to true, the calculated μ vector will be returned as well.
+"""
 function μ_test(net::Network; retmu=false)
     s = SParameters(net)
     Δ = s.s[:,1,1] .* s.s[:,2,2] .- s.s[:,1,2] .* s.s[:,2,1]
