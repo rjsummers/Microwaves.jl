@@ -237,9 +237,11 @@ function YParameters(z::ZParameters)
 end
 
 """
+    read_touchstone(filename::String)
+
 Reads a touchstone file and returns a corresponding network object.
 
-Currently, only works on 1 and 2 port version 1 files with s-parameters,
+Currently, only works on 1 and 2 port version 1 files,
 with a broadening of capability coming in the near future.
 """
 function read_touchstone(filename::String)
