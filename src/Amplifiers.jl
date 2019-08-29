@@ -3,6 +3,8 @@ module Amplifiers
 using ..RF.Networks: Network, SParameters
 
 """
+    Γ_in(net::Network, Γ_L::Vector{Complex})
+
 Returns the input reflection coefficient of a two-port network with
 a reflection coefficient Γ_L appearing looking out of port 2.
 """
@@ -12,6 +14,8 @@ function Γ_in(net::Network, Γ_L::Vector{Complex})
 end
 
 """
+    Γ_out(net::Network, Γ_S::Vector{Complex})
+
 Returns the output (port 2) reflection coefficient of a two-port network
 with a reflection coefficient Γ_S appearing looking out of port 1.
 """
