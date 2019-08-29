@@ -25,6 +25,8 @@ function Γ_out(net::Network, Γ_S::Vector{Complex})
 end
 
 """
+    power_gain(net::Network, Γ_L::Vector{Complex})
+
 Returns the power gain of a two port network with a reflection coefficient Γ_L
 appearing looking out of port 2.
 """
@@ -36,6 +38,8 @@ function power_gain(net::Network, Γ_L::Vector{Complex})
 end
 
 """
+    available_power_gain(net::Network, Γ_S::Vector{Complex})
+
 Returns the available power gain of a two port network with a reflection
 coefficient Γ_S appearing looking out of port 1.
 """
@@ -47,6 +51,8 @@ function available_power_gain(net::Network, Γ_S::Vector{Complex})
 end
 
 """
+    transducer_power_gain(net::Network, Γ_S::Vector{Complex}, Γ_L::Vector{Complex})
+
 Returns the transducer power gain of a two port network with a reflection
 coefficient Γ_S appearing looking out of port 1 and a reflection coefficient
 Γ_L appearing looking out of port 2.
@@ -59,6 +65,8 @@ function transducer_power_gain(net::Network, Γ_S::Vector{Complex}, Γ_L::Vector
 end
 
 """
+    μ_test(net::Network[, retmu=false])
+
 Performs the μ-test for unconditional stability of a two-port network 'net'.
 
 A network is unconditionally stable if μ > 1, and larger values of μ correspond
