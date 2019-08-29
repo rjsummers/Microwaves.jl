@@ -442,6 +442,14 @@ function read_touchstone(filename::String)
 
         if parameter == "S"
             net = SParameters(data, freq, z0)
+        elseif parameter == "Z"
+            net = ZParameters(data, freq)
+        elseif parameter == "Y"
+            net = YParameters(data, freq)
+        elseif parameter == "H"
+            net = HParameters(data, freq)
+        elseif parameter == "G"
+            net = GParameters(data, freq)
         end
         net
     end
