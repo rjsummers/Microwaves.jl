@@ -68,6 +68,34 @@ mutable struct TParameters <: Network
     end
 end
 
+function SParameters(s::SParameters)
+    copy(s)
+end
+
+function ABCDParameters(abcd::ABCDParameters)
+    copy(abcd)
+end
+
+function ZParameters(z::ZParameters)
+    copy(z)
+end
+
+function YParameters(y::YParameters)
+    copy(y)
+end
+
+function HParameters(h::HParameters)
+    copy(h)
+end
+
+function GParameters(g::GParameters)
+    copy(g)
+end
+
+function TParameters(t::TParameters)
+    copy(t)
+end
+
 function SParameters(s11, s12, s21, s22, f; z0=50)
     s = cat(cat(s11, s21, dims=2), cat(s12, s22, dims=2), dims=3)
     SParameters(s, f, z0)
