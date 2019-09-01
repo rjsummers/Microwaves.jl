@@ -5,6 +5,8 @@ using LinearAlgebra
 abstract type Network end
 
 """
+    SParameters(s, f, z0)
+
 S-parameters of a network.
 """
 mutable struct SParameters <: Network
@@ -17,6 +19,8 @@ mutable struct SParameters <: Network
 end
 
 """
+    ABCDParameters(abcd, f)
+
 ABCD-parameters of a network.
 """
 mutable struct ABCDParameters <: Network
@@ -25,6 +29,8 @@ mutable struct ABCDParameters <: Network
 end
 
 """
+    ZParameters(z, f)
+
 Z-parameters of a network.
 """
 mutable struct ZParameters <: Network
@@ -33,6 +39,8 @@ mutable struct ZParameters <: Network
 end
 
 """
+    YParameters(y, f)
+
 Y-parameters of a network.
 """
 mutable struct YParameters <: Network
@@ -41,6 +49,8 @@ mutable struct YParameters <: Network
 end
 
 """
+    HParameters(h, f)
+
 H-parameters of a network.
 """
 mutable struct HParameters <: Network
@@ -49,6 +59,8 @@ mutable struct HParameters <: Network
 end
 
 """
+    GParameters(g, f)
+
 G-parameters of a network.
 """
 mutable struct GParameters <: Network
@@ -57,6 +69,8 @@ mutable struct GParameters <: Network
 end
 
 """
+    TParameters(t, f)
+
 T-parameters of a network.
 """
 mutable struct TParameters <: Network
