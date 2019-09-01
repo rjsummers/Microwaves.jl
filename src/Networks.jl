@@ -13,7 +13,12 @@ mutable struct SParameters <: Network
     s::Array{ComplexF64}
     f::Vector{Float64}
     z0::Vector{ComplexF64}
-    function SParameters(s, f, z0::Real)
+    nports::Int64
+    function SParameters(s::Array{Complex}, f::Array{Real}, z0::Array{Real})
+        nports = size(s)[2]
+        new(s, f, z0, nports)
+    end
+    function SParameters(s::Array{Complex}, f::Array{Real}, z0::Real)
         new(s, f, ones(size(s)[2]).*z0)
     end
 end
@@ -26,6 +31,11 @@ ABCD-parameters of a network.
 mutable struct ABCDParameters <: Network
     abcd::Array{ComplexF64}
     f::Vector{Float64}
+    nports::Int64
+    function ABCDParameters(abcd::Array{Complex}, f::Array{Real})
+        nports = size(abcd)[2]
+        new(abcd, f, nports)
+    end
 end
 
 """
@@ -36,6 +46,11 @@ Z-parameters of a network.
 mutable struct ZParameters <: Network
     z::Array{ComplexF64}
     f::Vector{Float64}
+    nports::Int64
+    function ZParameters(z::Array{Complex}, f::Array{Real})
+        nports = size(z)[2]
+        new(z, f, nports)
+    end
 end
 
 """
@@ -46,6 +61,11 @@ Y-parameters of a network.
 mutable struct YParameters <: Network
     y::Array{ComplexF64}
     f::Vector{Float64}
+    nports::Int64
+    function YParameters(y::Array{Complex}, f::Array{Real})
+        nports = size(y)[2]
+        new(y, f, nports)
+    end
 end
 
 """
@@ -56,6 +76,11 @@ H-parameters of a network.
 mutable struct HParameters <: Network
     h::Array{ComplexF64}
     f::Vector{Float64}
+    nports::Int64
+    function HParameters(h::Array{Complex}, f::Array{Real})
+        nports = size(h)[2]
+        new(h, f, nports)
+    end
 end
 
 """
@@ -66,6 +91,11 @@ G-parameters of a network.
 mutable struct GParameters <: Network
     g::Array{ComplexF64}
     f::Vector{Float64}
+    nports::Int64
+    function GParameters(g::Array{Complex}, f::Array{Real})
+        nports = size(g)[2]
+        new(g, f, nports)
+    end
 end
 
 """
@@ -77,8 +107,13 @@ mutable struct TParameters <: Network
     t::Array{ComplexF64}
     f::Vector{Float64}
     z0::Vector{ComplexF64}
-    function SParameters(s, f, z0::Real)
-        new(s, f, ones(size(s)[2]).*z0)
+    nports::Int64
+    function TParameters(t::Array{Complex}, f::Array{Real}, z0::Array{Real})
+        nports = size(t)[2]
+        new(t, f, nports)
+    end
+    function TParameters(t::Array{Complex}, f::Array{Real}, z0::Real)
+        new(t, f, ones(size(s)[2]).*z0)
     end
 end
 
