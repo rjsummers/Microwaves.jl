@@ -117,30 +117,86 @@ mutable struct TParameters <: Network
     end
 end
 
+"""
+    SParameters(s::SParameters)
+
+Return a copy of the network.
+
+Intended for applications where specific network parameters are desired and
+any network type could be provided.
+"""
 function SParameters(s::SParameters)
     copy(s)
 end
 
+"""
+    ABCDParameters(abcd::ABCDParameters)
+
+Return a copy of the network.
+
+Intended for applications where specific network parameters are desired and
+any network type could be provided.
+"""
 function ABCDParameters(abcd::ABCDParameters)
     copy(abcd)
 end
 
+"""
+    ZParameters(z::ZParameters)
+
+Return a copy of the network.
+
+Intended for applications where specific network parameters are desired and
+any network type could be provided.
+"""
 function ZParameters(z::ZParameters)
     copy(z)
 end
 
+"""
+    YParameters(y::YParameters)
+
+Return a copy of the network.
+
+Intended for applications where specific network parameters are desired and
+any network type could be provided.
+"""
 function YParameters(y::YParameters)
     copy(y)
 end
 
+"""
+    HParameters(h::HParameters)
+
+Return a copy of the network.
+
+Intended for applications where specific network parameters are desired and
+any network type could be provided.
+"""
 function HParameters(h::HParameters)
     copy(h)
 end
 
+"""
+    GParameters(g::GParameters)
+
+Return a copy of the network.
+
+Intended for applications where specific network parameters are desired and
+any network type could be provided.
+"""
 function GParameters(g::GParameters)
     copy(g)
 end
 
+"""
+    TParameters(t::TParameters)
+
+Return a copy of the network.
+
+Intended for applications where specific network parameters are desired and
+any network type could be provided.
+"""
 function TParameters(t::TParameters)
     copy(t)
 end
