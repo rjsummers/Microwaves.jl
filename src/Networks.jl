@@ -201,36 +201,78 @@ function TParameters(t::TParameters)
     copy(t)
 end
 
+"""
+    SParameters(s11, s12, s21, s22, f[, z0=50])
+
+Creates a two-port S-parameter network given four vectors
+for each parameter vs. frequency.
+"""
 function SParameters(s11, s12, s21, s22, f; z0=50)
     s = cat(cat(s11, s21, dims=2), cat(s12, s22, dims=2), dims=3)
     SParameters(s, f, z0)
 end
 
+"""
+    ABCDParameters(a, b, c, d, f)
+
+Creates a two-port ABCD-parameter network given four vectors
+for each parameter vs. frequency.
+"""
 function ABCDParameters(a, b, c, d, f)
     abcd = cat(cat(a, c, dims=2), cat(b, d, dims=2), dims=3)
     ABCDParameters(abcd, f)
 end
 
+"""
+    ZParameters(z11, z12, z21, z22, f)
+
+Creates a two-port Z-parameter network given four vectors
+for each parameter vs. frequency.
+"""
 function ZParameters(z11, z12, z21, z22, f)
     z = cat(cat(z11, z21, dims=2), cat(z12, z22, dims=2), dims=3)
     ZParameters(z, f)
 end
 
+"""
+    YParameters(y11, y12, y21, y22, f)
+
+Creates a two-port Y-parameter network given four vectors
+for each parameter vs. frequency.
+"""
 function YParameters(y11, y12, y21, y22, f)
     y = cat(cat(y11, y21, dims=2), cat(y12, y22, dims=2), dims=3)
     YParameters(y, f)
 end
 
+"""
+    HParameters(h11, h12, h21, h22, f)
+
+Creates a two-port H-parameter network given four vectors
+for each parameter vs. frequency.
+"""
 function HParameters(h11, h12, h21, h22, f)
     h = cat(cat(h11, h21, dims=2), cat(h12, h22, dims=2), dims=3)
     HParameters(h, f)
 end
 
+"""
+    GParameters(g11, g12, g21, g22, f)
+
+Creates a two-port G-parameter network given four vectors
+for each parameter vs. frequency.
+"""
 function GParameters(g11, g12, g21, g22, f)
     g = cat(cat(g11, g21, dims=2), cat(g12, g22, dims=2), dims=3)
     HParameters(g, f)
 end
 
+"""
+    TParameters(t11, t12, t21, t22, f[, z0=50])
+
+Creates a two-port T-parameter network given four vectors
+for each parameter vs. frequency.
+"""
 function TParameters(t11, t12, t21, t22, f; z0=50)
     t = cat(cat(t11, t21, dims=2), cat(t12, t22, dims=2), dims=3)
     TParameters(t, f, z0)
