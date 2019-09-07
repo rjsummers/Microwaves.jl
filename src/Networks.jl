@@ -278,6 +278,13 @@ function TParameters(t11, t12, t21, t22, f; z0=50)
     TParameters(t, f, z0)
 end
 
+"""
+    SParameters(abcd::ABCDParameters[, z0=50])
+
+Converts an ABCD-parameter object to an S-parameter object.
+Only works for two-port networks, and assumes z0 is the same
+for all ports.
+"""
 function SParameters(abcd::ABCDParameters; z0=50)
     a = abcd.abcd[:,1,1]
     b = abcd.abcd[:,1,2]
@@ -292,6 +299,11 @@ function SParameters(abcd::ABCDParameters; z0=50)
     SParameters(s, copy(abcd.f), z0)
 end
 
+"""
+    SParameters(z::ZParameters[, z0=50])
+
+Converts a Z-Parameter object to an S-Parameter object.
+"""
 function SParameters(z::ZParameters; z0=50)
     s = zeros(z.z)
     z0vec = z0.*Vector(ones(size(z.z)[2]))
@@ -302,6 +314,11 @@ function SParameters(z::ZParameters; z0=50)
     SParameters(s, copy(z.f), z0)
 end
 
+"""
+    SParameters(y::YParameters[, z0=50])
+
+Converts a Y-Parameter object to an S-Parameter object.
+"""
 function SParameters(y::YParameters; z0=50)
     s = zeros(y.y)
     z0vec = z0.*Vector(ones(size(y.y)[2]))
