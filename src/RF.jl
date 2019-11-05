@@ -2,6 +2,7 @@ __precompile__(true)
 
 module RF
 
+include("Media.jl")
 include("Networks.jl")
 include("Amplifiers.jl")
 include("Radar.jl")
@@ -38,7 +39,7 @@ function dB(x::Number, units::Symbol)
     elseif units == :Np
         return 20 * log10(Base.MathConstants.e) * x
     end
-end 
+end
 
 function Np(x::Number, units::Symbol)
     if units == :voltage
