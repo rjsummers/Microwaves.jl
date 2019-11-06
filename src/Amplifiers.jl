@@ -46,7 +46,7 @@ coefficient `Γ_S` appearing looking out of port 1.
 function available_power_gain(net::Network, Γ_S::Vector{Complex})
     s = SParameters(net)
     num = abs.(s.s[:,2,1]).^2 .* (1 .- abs.(Γ_S).^2)
-    den = abs.(1 .- s.s[:,1,1] .* Γ_s).^2 .* (1 .- Γ_out(s, Γ_S).^2)
+    den = abs.(1 .- s.s[:,1,1] .* Γ_S).^2 .* (1 .- Γ_out(s, Γ_S).^2)
     num ./ den
 end
 

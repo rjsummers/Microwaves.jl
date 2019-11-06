@@ -113,7 +113,7 @@ mutable struct TParameters <: Network
         new(t, f, nports)
     end
     function TParameters(t::Array{Complex}, f::Array{Real}, z0::Real)
-        new(t, f, ones(size(s)[2]).*z0)
+        new(t, f, ones(size(t)[2]).*z0)
     end
 end
 
