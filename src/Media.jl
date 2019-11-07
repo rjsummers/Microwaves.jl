@@ -1,6 +1,6 @@
 module Media
 
-using Convex
+using LinearAlgebra
 
 """
     MSub(ϵ_r, h, t, σ, tan_δ)
@@ -100,7 +100,7 @@ end
 Calculates the characterisitc impedance of a microstrip line of width w (in
 meters) at frequency f (in Hz) on a given substrate.
 """
-function mline_taper_props(f::Real, w::IndexAtom, l::Real, substrate::MSub)
+function mline_taper_props(f::Real, w::Real, l::Real, substrate::MSub)
     u = w / substrate.h
     t = substrate.t / substrate.h
     η_0 = 376.73
@@ -108,10 +108,10 @@ function mline_taper_props(f::Real, w::IndexAtom, l::Real, substrate::MSub)
     bs = substrate.h * 1e3
 
     tanh_arg = sqrt(6.517 * u)
-    tanh_eval = (exp(2*tanh_arg) - 1) * invpos(exp(2*tanh_arg) + 1)
+    tanh_eval = (exp(2*tanh_arg) - 1) / (exp(2*tanh_arg) + 1)
     cosh_arg = sqrt(substrate.ϵ_r - 1)
     cosh_eval = (exp(cosh_arg) + exp(-cosh_arg)) / 2
-    Δu1 = t / π * log(1 + 4 * ℯ / t * square(tanh_eval))
+    Δu1 = t / π * log(1 + 4 * ℯ / t * tanh_eval^2)
     Δur = (1/2) * (1 + 1/cosh_eval) * Δu1
     u1 = u + Δu1
     ur = u + Δur

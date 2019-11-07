@@ -11,9 +11,9 @@ version = "0.5.0"
 
 [[Compat]]
 deps = ["Base64", "Dates", "DelimitedFiles", "Distributed", "InteractiveUtils", "LibGit2", "Libdl", "LinearAlgebra", "Markdown", "Mmap", "Pkg", "Printf", "REPL", "Random", "Serialization", "SharedArrays", "Sockets", "SparseArrays", "Statistics", "Test", "UUIDs", "Unicode"]
-git-tree-sha1 = "84aa74986c5b9b898b0d1acaf3258741ee64754f"
+git-tree-sha1 = "ed2c4abadf84c53d9e58510b5fc48912c2336fbb"
 uuid = "34da2185-b29b-5c13-b0c7-acf172513d20"
-version = "2.1.0"
+version = "2.2.0"
 
 [[Dates]]
 deps = ["Printf"]
@@ -130,6 +130,6 @@ uuid = "4ec0a83e-493e-50e2-b9ac-8f72acf5a8f5"
 
 [[Unitful]]
 deps = ["LinearAlgebra", "Random"]
-git-tree-sha1 = "75efb362655883381d03004ca53a3a95facb9a54"
+git-tree-sha1 = "92bdf0ccfa9612b167d0adaadef832a09971ceb0"
 uuid = "1986cc42-f94f-5a68-af5c-568840ba703d"
-version = "0.16.0"
+version = "0.17.0"
