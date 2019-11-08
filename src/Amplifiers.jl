@@ -1,6 +1,6 @@
 module Amplifiers
 
-using ..RF.Networks: Network, SParameters
+using ..Microwaves.Networks: Network, SParameters
 
 """
     Γ_in(net::Network, Γ_L::Vector{Complex})

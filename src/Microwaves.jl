@@ -1,6 +1,6 @@
 __precompile__(true)
 
-module RF
+module Microwaves
 
 include("Media.jl")
 include("Networks.jl")
